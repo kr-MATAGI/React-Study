@@ -1,13 +1,30 @@
 import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 
+const useClick = (onClick) => {
+  if (typeof onclick !== "function") return;
+
+  const element = useRef();
+  useEffect(() => {
+    if (element.current) {
+      element.current.addEventListener("click", onClick);
+    }
+
+    return () => {
+      if (element.current) {
+        element.current.removeEventListener("click", onClick);
+      }
+    };
+  }, []);
+  return element;
+};
+
 const App = () => {
-  const input = useRef();
-  console.log(input.current);
+  const sayHello = () => console.log("say Hello");
+  const title = useClick(sayHello);
   return (
     <div className="App">
-      <div>Hi</div>
-      <input ref={input} placeholder="la" />
+      <h1 ref={title}>Hi</h1>
     </div>
   );
 };
